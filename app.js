@@ -5,6 +5,8 @@ var cheerio = require('cheerio');
 var http = require('http');
 var app     = express();
 
+app.set('port', process.env.PORT || 3000);
+
 app.get('/statsit', function(req, res){
 
     var baseUrl = "http://eatalvi14.loiske.net/lohkotilanne.php?lohko=",
@@ -59,8 +61,6 @@ app.get('/statsit', function(req, res){
 
 });
 
-app.listen('3000');
-
-console.log('Magic happens on port 3000');
-
-exports = module.exports = app;
+http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});

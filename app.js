@@ -26,21 +26,32 @@ app.get('/statsit', function(req, res){
             var statsiElem = $('#togglePP');
 
             matsiElem.find('tr').each(function(index, row) {
-                var temp = cheerio.load(row);
+                var temp = cheerio.load(row),
+                    matsi = {}, solut;
                 if (temp.html().indexOf(tiimi) !== -1) {
-                    matsit.push(temp.html());
+                    solut = temp('td');
+                    matsi.date = temp(solut[0]).text();
+                    matsi.home = temp(solut[2]).text();
+                    matsi.away = temp(solut[4]).text();
+                    matsi.score = temp(solut[5]).text();
+                    matsit.push(matsi);
                 }
             });
 
             statsiElem.find('tr').each(function(index, row) {
-                var temp = cheerio.load(row);
+                var temp = cheerio.load(row),
+                    statsi = {}, solut;
                 if (temp.html().indexOf(tiimi) !== -1) {
-                    statsit.push(temp.html());
+                    solut = temp('td');
+                    statsi.name = temp(solut[1]).text();
+                    statsi.goals = temp(solut[3]).text();
+                    statsi.assists = temp(solut[4]).text();
+                    statsit.push(statsi);
                 }
             });
 
-            json.matsit = matsit;
-            json.statsit = statsit;
+            json.games = matsit;
+            json.stats = statsit;
 
             res.json(json).end();
         }

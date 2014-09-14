@@ -1,11 +1,12 @@
 {
-  "name"         : "statsit",
-  "version"      : "0.0.1",
-  "description"  : "Esport Talviliigan statsit",
-  "author"       : "VarmaIS",
-  "dependencies" : {
-    "express"    : "latest",
-    "request"    : "latest",
-    "cheerio"    : "latest"
+  "name": "statsit",
+  "version": "0.0.1",
+  "description": "Esport Talviliigan statsit",
+  "author": "VarmaIS",
+  "dependencies": {
+    "cheerio": "latest",
+    "express": "latest",
+    "node-cache": "^1.0.0",
+    "request": "latest"
   }
 }

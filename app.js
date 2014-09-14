@@ -6,6 +6,7 @@ var http = require('http');
 var app     = express();
 
 app.set('port', process.env.PORT || 3000);
+app.set("jsonp callback", true);
 
 app.get('/statsit', function(req, res){
 
@@ -55,7 +56,7 @@ app.get('/statsit', function(req, res){
             json.games = matsit;
             json.stats = statsit;
 
-            res.json(json).end();
+            res.jsonp(JSON.stringify(json)).end();
         }
     });
 

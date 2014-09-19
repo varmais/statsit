@@ -37,7 +37,7 @@ app.get('/statsit', function(req, res) {
 
         } else if (val.hasOwnProperty(cacheKey)) {
 
-            res.jsonp(JSON.stringify(val)).end();
+            res.jsonp(JSON.stringify(val[cacheKey])).end();
             return;
 
         } else {

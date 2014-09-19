@@ -19,7 +19,7 @@ app.get('/statsit', function(req, res) {
     var baseUrl = "http://eatalvi14.loiske.net/lohkotilanne.php?",
         lohko = req.query.lohko,
         tiimi = req.query.tiimi,
-        query = 'lohko=' + lohko + '&tiimi=' + tiimi;
+        cacheKey = lohko + tiimi;
 
 
     if (!(lohko && tiimi)) {
@@ -27,9 +27,7 @@ app.get('/statsit', function(req, res) {
         return;
     }
 
-    cache.get(query, function(err, val) {
-
-        console.log(query, val);
+    cache.get(cacheKey, function(err, val) {
 
         if (err) {
 
@@ -37,9 +35,8 @@ app.get('/statsit', function(req, res) {
             res.status(404).end(http.STATUS_CODES[404]);
             return;
 
-        } else if (val.stats && val.games) {
+        } else if (val.hasOwnProperty(cacheKey)) {
 
-            console.log('getting from cache', val);
             res.jsonp(JSON.stringify(val)).end();
             return;
 
@@ -82,9 +79,8 @@ app.get('/statsit', function(req, res) {
                     json.games = matsit;
                     json.stats = statsit;
 
-                    cache.set(query, json, function(err, success) {
+                    cache.set(cacheKey, json, function(err, success) {
                         if (!err && success) {
-                            console.log('set cache', query, success);
                             res.jsonp(JSON.stringify(json)).end();
                         }
                     });

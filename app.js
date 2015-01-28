@@ -90,6 +90,54 @@ app.get('/statsit', function(req, res) {
     });
 });
 
+app.get('/tilanne', function(req, res) {
+
+    var baseUrl = "http://eatalvi14.loiske.net/lohkotilanne.php?",
+        lohko = req.query.lohko,
+        cacheKey = lohko + '_tilanne';
+
+
+    if (!(lohko)) {
+        res.status(404).end(http.STATUS_CODES[404]);
+        return;
+    }
+
+    cache.get(cacheKey, function(err, val) {
+
+        if (err) {
+
+            console.log(err);
+            res.status(404).end(http.STATUS_CODES[404]);
+            return;
+
+        } else if (val.hasOwnProperty(cacheKey)) {
+
+            res.send(val[cacheKey].html());
+            return;
+
+        } else {
+
+            request(baseUrl + 'lohko=' + lohko, function(err, response, html) {
+                if (!err) {
+
+                    var $ = cheerio.load(html);
+                    var $table = $('table', '#keski').first();
+                    var $tablehtml = $('<table><thead></thead><tbody></tbody></table>');
+
+                    $tablehtml.find('thead').html($table.find('th').last());
+                    $tablehtml.find('tbody').html($table.find('td'));
+    
+                    cache.set(cacheKey, $tablehtml, function(err, success) {
+                        if (!err && success) {
+                            res.send($tablehtml.html());
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+
 app.get('/flush', function(req, res) {
     cache.flushAll();
     res.send('Success!');

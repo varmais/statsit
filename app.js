@@ -124,8 +124,8 @@ app.get('/tilanne', function(req, res) {
                     var $table = $('table', '#keski').first();
                     var $tablehtml = $('<table><thead></thead><tbody></tbody></table>');
 
-                    $tablehtml.find('thead').html($table.find('th').last());
-                    $tablehtml.find('tbody').html($table.find('td'));
+                    $tablehtml.find('thead').html($table.find('tr:nth-child(2)'));
+                    $tablehtml.find('tbody').html($table.find('tr:nth-child(n+3)'));
 
                     var json = {
                         html: $tablehtml.html()

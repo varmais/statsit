@@ -112,7 +112,7 @@ app.get('/tilanne', function(req, res) {
 
         } else if (val.hasOwnProperty(cacheKey)) {
 
-            res.send(val[cacheKey].html());
+            res.jsonp(JSON.stringify(val[cacheKey])).end();
             return;
 
         } else {
@@ -126,10 +126,14 @@ app.get('/tilanne', function(req, res) {
 
                     $tablehtml.find('thead').html($table.find('th').last());
                     $tablehtml.find('tbody').html($table.find('td'));
+
+                    var json = {
+                        html: $tablehtml.html()
+                    };
     
-                    cache.set(cacheKey, $tablehtml, function(err, success) {
+                    cache.set(cacheKey, json, function(err, success) {
                         if (!err && success) {
-                            res.send($tablehtml.html());
+                            res.jsonp(JSON.stringify(json)).end();
                         }
                     });
                 }
